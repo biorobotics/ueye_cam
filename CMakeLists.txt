@@ -54,11 +54,13 @@ set(UEYECAM_LIB_NAME ueye_wrapper)
 
 set(UEYECAM_LIB_SOURCES
   src/ueye_cam_driver.cpp
+  src/ueye_cam_ros.cpp
 )
 
 set(UEYECAM_LIB_HEADERS
   include/ueye_cam/logging_macros.hpp
   include/ueye_cam/ueye_cam_driver.hpp
+  include/ueye_cam/ueye_cam_ros.hpp
 )
 
 set(UEYECAM_NODELET_SOURCES
@@ -95,6 +97,9 @@ add_dependencies(${UEYECAM_NODELET_NAME} ${PROJECT_NAME}_gencfg)
 
 add_executable(check_ueye_api src/check_ueye_api.cpp)
 target_link_libraries(check_ueye_api ${catkin_LIBRARIES} ${UEYECAM_LIB_NAME})
+
+add_executable(ueye_cam_node nodes/ueye_cam_node.cpp)
+target_link_libraries(ueye_cam_node ${UEYECAM_LIB_NAME})
 
 # Do not package the barebones IDS drivers, since they will mask over the official drivers (when present)
 #if(USE_UNOFFICIAL_UEYE_DRIVERS)
