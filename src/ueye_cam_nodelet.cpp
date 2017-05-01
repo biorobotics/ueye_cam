@@ -902,7 +902,7 @@ void UEyeCamNodelet::frameGrabLoop() {
 
   DEBUG_STREAM("Starting threaded frame grabber loop for [" << cam_name_ << "]");
 
-  ros::Rate idleDelay(200);
+  ros::Rate idleDelay(cam_params_.frame_rate);
 
   int prevNumSubscribers = 0;
   int currNumSubscribers = 0;
