@@ -825,6 +825,38 @@ INT UEyeCamDriver::setFreeRunMode() {
   return is_err;
 }
 
+INT UEyeCamDriver::setRunningMode() {
+  if (!isConnected()) return IS_INVALID_CAMERA_HANDLE;
+
+  INT is_err = IS_SUCCESS;
+
+  if (!freeRunModeActive()) {
+    setStandbyMode(); // No need to check for success
+
+    UINT nMode = IO_FLASH_MODE_FREERUN_HI_ACTIVE;
+    if ((is_err = is_IO(cam_handle_, IS_IO_CMD_FLASH_SET_MODE,
+        (void*) &nMode, sizeof(nMode))) != IS_SUCCESS) {
+      WARN_STREAM("Could not set free-run active-low flash output for [" << cam_name_ <<
+        "] (" << err2str(is_err) << ")");
+      WARN_STREAM("WARNING: camera hardware does not support ueye_cam's master-slave synchronization method");
+    }
+
+    if ((is_err = is_EnableEvent(cam_handle_, IS_SET_EVENT_FRAME)) != IS_SUCCESS) {
+      ERROR_STREAM("Could not enable frame event for [" << cam_name_ <<
+        "] (" << err2str(is_err) << ")");
+      return is_err;
+    }
+    if ((is_err = is_CaptureVideo(cam_handle_, IS_WAIT)) != IS_SUCCESS) {
+      ERROR_STREAM("Could not start free-run live video mode for [" << cam_name_ <<
+        "] (" << err2str(is_err) << ")");
+      return is_err;
+    }
+    DEBUG_STREAM("Started live video mode for [" << cam_name_ << "]");
+  }
+
+  return is_err;
+}
+
 
 INT UEyeCamDriver::setExtTriggerMode() {
   if (!isConnected()) return IS_INVALID_CAMERA_HANDLE;

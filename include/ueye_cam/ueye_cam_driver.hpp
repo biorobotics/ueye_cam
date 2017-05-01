@@ -298,6 +298,11 @@ public:
   INT setFreeRunMode();
 
   /**
+   * A version of setFreeRunMode that does not set the flash parameters.
+   */
+  INT setRunningMode();
+
+  /**
    * Sets current camera to external trigger mode, where a HI to LO falling-edge
    * signal on the digital input pin of the camera will trigger the camera to
    * capture a frame. This function also resets the digital output pin to
