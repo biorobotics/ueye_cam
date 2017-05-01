@@ -1172,8 +1172,9 @@ ros::Time UEyeCamROS::getImageTimestamp() {
 }
 
 ros::Time UEyeCamROS::getImageTickTimestamp() {
-  uint64_t tick;
-  if(getClockTick(&tick)) {
+  uint64_t tick = 0;
+  // NOTE Sometimes getClockTick returns 0 when switching parameters!
+  if(getClockTick(&tick) && tick != 0) {
     return init_ros_time_ + ros::Duration(double(tick - init_clock_tick_)*1e-7);
   }
   return ros::Time::now();
