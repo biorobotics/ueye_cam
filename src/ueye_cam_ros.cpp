@@ -980,8 +980,11 @@ void UEyeCamROS::frameGrabLoop() {
             init_ros_time_ = getImageTimestamp();
 
             // Deal with instability in getImageTimestamp due to daylight savings time
-            if (abs((ros::Time::now() - init_ros_time_).toSec()) > abs((ros::Time::now() - (init_ros_time_+ros::Duration(3600,0))).toSec())) { init_ros_time_ += ros::Duration(3600,0); }
-            if (abs((ros::Time::now() - init_ros_time_).toSec()) > abs((ros::Time::now() - (init_ros_time_-ros::Duration(3600,0))).toSec())) { init_ros_time_ -= ros::Duration(3600,0); }
+            // NOTE This causes instability due to negative times!
+            // if (abs((ros::Time::now() - init_ros_time_).toSec()) > abs((ros::Time::now() - (init_ros_time_+ros::Duration(3600,0))).toSec())) 
+            // { init_ros_time_ += ros::Duration(3600,0); }
+            // if (abs((ros::Time::now() - init_ros_time_).toSec()) > abs((ros::Time::now() - (init_ros_time_-ros::Duration(3600,0))).toSec())) 
+            // { init_ros_time_ -= ros::Duration(3600,0); }
           }
         }
         img_msg_ptr->header.stamp = cam_info_msg_ptr->header.stamp = getImageTickTimestamp();
